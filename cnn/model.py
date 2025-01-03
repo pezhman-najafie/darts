@@ -55,6 +55,8 @@ class Cell(nn.Module):
           h1 = drop_path(h1, drop_prob)
         if not isinstance(op2, Identity):
           h2 = drop_path(h2, drop_prob)
+      if h1.shape != h2.shape:
+          h2 = F.interpolate(h2, size=h1.shape[2:], mode='bilinear', align_corners=False)
       s = h1 + h2
       states += [s]
     return torch.cat([states[i] for i in self._concat], dim=1)
